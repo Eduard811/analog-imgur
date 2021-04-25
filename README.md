@@ -1,6 +1,6 @@
 Pet-project, планирую сделать что то похожее с imgur.com.</br>
 Проект делаю для собственного развития и пополнения портфолио.</br>
-Frontent: React, Redux, Redux-Thunk, TypeScript, Scss, Axios.</br>
+Frontent: React, Redux, Redux-Thunk, TypeScript, Material-Ui, Axios.</br>
 Backend: NodeJS, Express, MongoDB.</br>
 
 Задачи которые ставлю перед собой в ходе выполнения:</br>
