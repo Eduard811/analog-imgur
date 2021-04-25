@@ -9,11 +9,11 @@ const initialState: PostState = {
 export const postReducer = (state = initialState, action: PostAction): PostState => {
   switch (action.type) {
     case PostActionTypes.FETCH_POSTS:
-      return { ...state, isLoading: true, posts: [] }
+      return { ...state, isLoading: true }
     case PostActionTypes.FETCH_POSTS_SUCCESS:
-      return { ...state, isLoading: true, posts: action.payload }
+      return { ...state, isLoading: false, posts: action.payload }
     case PostActionTypes.FETCH_POSTS_ERROR:
-      return { ...state, isLoading: true, error: action.payload }
+      return { ...state, isLoading: false, error: action.payload }
     default:
       return state
   }
