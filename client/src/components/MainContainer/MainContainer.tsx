@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
@@ -11,6 +11,9 @@ import Zoom from '@material-ui/core/Zoom'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
+import { useActions } from '../../hooks/useActions'
+import { Link } from 'react-router-dom'
+import { LOGIN_ROUTE } from '../../utils/consts'
 
 interface Props {
   window?: () => Window
@@ -40,6 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: '#139156',
       },
+    },
+    container: {
+      padding: '40px 0',
+    },
+    link: {
+      textDecoration: 'none',
+      color: '#fff',
     },
   })
 )
@@ -75,23 +85,32 @@ function ScrollTop(props: Props) {
 const MainContainer = (props: Props) => {
   const classes = useStyles()
   const { children } = props
+  const { toggleIsOpen } = useActions()
 
   return (
     <React.Fragment>
       <CssBaseline />
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            onClick={() => toggleIsOpen(true)}
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <MenuIcon />
           </IconButton>
           <div className={classes.wrap}>
-            <Button color="inherit">Login</Button>
+            <Link className={classes.link} to={LOGIN_ROUTE}>
+              <Button color="inherit">Login</Button>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>
       <Toolbar id="back-to-top-anchor" />
       <Container>
-        <React.Fragment>{children}</React.Fragment>
+        <div className={classes.container}>{children}</div>
       </Container>
       <ScrollTop {...props}>
         <Fab color="secondary" size="small" aria-label="scroll back to top">
