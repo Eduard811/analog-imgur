@@ -1,7 +1,7 @@
 import { HomeAction, HomeActionTypes, HomeState } from '../../types/home'
 
 const initialState: HomeState = {
-  isOpen: false,
+  isOpen: false, //sidebar
 }
 
 export const homeReducer = (state = initialState, action: HomeAction) => {
