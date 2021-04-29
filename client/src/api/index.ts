@@ -2,12 +2,12 @@ import axios, { AxiosRequestConfig } from 'axios'
 
 //для обычных запросов которые не требуют авторизации
 const $host = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: process.env.REACT_APP_API_URL,
 })
 
 //будет подставлятся header authorization и туда будет добавлятся токен
 const $authHost = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: process.env.REACT_APP_API_URL,
 })
 
 const authInterceptor = (config: AxiosRequestConfig) => {

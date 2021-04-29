@@ -34,7 +34,11 @@ const Home: React.FC = () => {
         <Button className={classes.customButton} variant="contained" color="primary">
           New post
         </Button>
-        {isLoading ? <h1>Идет загрузка...</h1> : posts.map((post) => <div>{post.title}</div>)}
+        {isLoading ? (
+          <h1>Идет загрузка...</h1>
+        ) : (
+          posts.map((post) => <div key={post.title}>{post.title}</div>)
+        )}
       </div>
     </MainContainer>
   )

@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -10,6 +11,7 @@ import Container from '@material-ui/core/Container'
 import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../../utils/consts'
 import { Link, useLocation } from 'react-router-dom'
 import LinkMU from '@material-ui/core/Link'
+import { login, registration } from '../../api/userAPI'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,6 +38,18 @@ const Login: React.FC = () => {
   const location = useLocation()
   const isLogin = location.pathname === LOGIN_ROUTE
 
+  const [userName, setUserName] = useState('')
+  const [password, setPassword] = useState('')
+
+  const signUpOrsignIn = async () => {
+    let user
+    if (isLogin) {
+      user = await login(userName, password)
+    } else {
+      user = await registration(userName, password)
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -57,6 +71,8 @@ const Login: React.FC = () => {
             name="username"
             autoComplete="username"
             autoFocus
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -68,6 +84,8 @@ const Login: React.FC = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           {!isLogin && (
             <TextField
@@ -82,7 +100,14 @@ const Login: React.FC = () => {
               autoComplete="current-password"
             />
           )}
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+          <Button
+            onClick={signUpOrsignIn}
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
             {isLogin ? 'Login' : 'Registration'}
           </Button>
           {isLogin && (
