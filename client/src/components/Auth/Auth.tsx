@@ -7,8 +7,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import { REGISTRATION_ROUTE } from '../../utils/consts'
-import { Link } from 'react-router-dom'
+import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../../utils/consts'
+import { Link, useLocation } from 'react-router-dom'
 import LinkMU from '@material-ui/core/Link'
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Login: React.FC = () => {
   const classes = useStyles()
+  const location = useLocation()
+  const isLogin = location.pathname === LOGIN_ROUTE
 
   return (
     <Container component="main" maxWidth="xs">
@@ -42,7 +44,7 @@ const Login: React.FC = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Login
+          {isLogin ? 'Login' : 'Registration'}
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -67,16 +69,31 @@ const Login: React.FC = () => {
             id="password"
             autoComplete="current-password"
           />
+          {!isLogin && (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="сonfirm-password"
+              label="Сonfirm password"
+              type="password"
+              id="сonfirm-password"
+              autoComplete="current-password"
+            />
+          )}
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-            Login
+            {isLogin ? 'Login' : 'Registration'}
           </Button>
-          <Grid container>
-            <Grid item>
-              <Link to={REGISTRATION_ROUTE}>
-                <LinkMU>Don't have an account? Registration</LinkMU>
-              </Link>
+          {isLogin && (
+            <Grid container>
+              <Grid item>
+                <Link to={REGISTRATION_ROUTE}>
+                  <LinkMU>Don't have an account? Registration</LinkMU>
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </form>
       </div>
     </Container>

@@ -1,9 +1,9 @@
 import Admin from './components/Admin/Admin'
 import Chat from './components/Chat/Chat'
 import Home from './components/Home/Home'
-import Login from './components/Login/Login'
+import Auth from './components/Auth/Auth'
 import Post from './components/Post/Post'
-import Registration from './components/Registration/Registration'
+
 import {
   ADMIN_ROUTE,
   CHAT_ROUTE,
@@ -31,11 +31,11 @@ export const publicRoutes = [
   },
   {
     path: LOGIN_ROUTE,
-    Component: Login,
+    Component: Auth,
   },
   {
     path: REGISTRATION_ROUTE,
-    Component: Registration,
+    Component: Auth,
   },
   {
     path: CHAT_ROUTE,
