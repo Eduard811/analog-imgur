@@ -14,6 +14,10 @@ import MenuIcon from '@material-ui/icons/Menu'
 import { useActions } from '../../hooks/useActions'
 import { Link } from 'react-router-dom'
 import { LOGIN_ROUTE } from '../../utils/consts'
+import BadgeAvatars from '../Avatar/Avatar'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
 interface Props {
   window?: () => Window
@@ -51,6 +55,11 @@ const useStyles = makeStyles((theme: Theme) =>
       textDecoration: 'none',
       color: '#fff',
     },
+    iconButton: {
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
+    },
   })
 )
 
@@ -85,7 +94,24 @@ function ScrollTop(props: Props) {
 const MainContainer = (props: Props) => {
   const classes = useStyles()
   const { children } = props
-  const { toggleIsOpen } = useActions()
+  const { toggleIsOpen, setIsAuth } = useActions()
+
+  const { isAuth } = useTypedSelector((state) => state.user)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const logout = () => {
+    localStorage.clear()
+    setIsAuth({}, !isAuth)
+    setAnchorEl(null)
+  }
 
   return (
     <React.Fragment>
@@ -102,9 +128,34 @@ const MainContainer = (props: Props) => {
             <MenuIcon />
           </IconButton>
           <div className={classes.wrap}>
-            <Link className={classes.link} to={LOGIN_ROUTE}>
-              <Button color="inherit">Login</Button>
-            </Link>
+            {isAuth ? (
+              <div>
+                <IconButton
+                  className={classes.iconButton}
+                  disableRipple={true}
+                  size="small"
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <BadgeAvatars />
+                </IconButton>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={logout}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              <Link className={classes.link} to={LOGIN_ROUTE}>
+                <Button color="inherit">Login</Button>
+              </Link>
+            )}
           </div>
         </Toolbar>
       </AppBar>

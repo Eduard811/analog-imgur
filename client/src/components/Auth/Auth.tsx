@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
@@ -8,10 +7,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-import { LOGIN_ROUTE, REGISTRATION_ROUTE } from '../../utils/consts'
+import { HOME_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE } from '../../utils/consts'
 import { Link, useLocation } from 'react-router-dom'
-import LinkMU from '@material-ui/core/Link'
 import { login, registration } from '../../api/userAPI'
+import { useActions } from '../../hooks/useActions'
+import { useHistory } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,18 +38,34 @@ const useStyles = makeStyles((theme) => ({
 const Login: React.FC = () => {
   const classes = useStyles()
   const location = useLocation()
+  const history = useHistory()
+
   const isLogin = location.pathname === LOGIN_ROUTE
 
-  const [userName, setUserName] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const { isAuth } = useTypedSelector((state) => state.user)
+
+  const { setIsAuth } = useActions()
+
   const signUpOrsignIn = async () => {
-    let user
-    if (isLogin) {
-      user = await login(userName, password)
-    } else {
-      user = await registration(userName, password)
+    try {
+      let user
+      if (isLogin) {
+        user = await login(username, password)
+      } else {
+        user = await registration(username, password)
+      }
+      setIsAuth(user, true)
+      history.push(HOME_ROUTE)
+    } catch (error) {
+      alert(error.response.data.message)
     }
+  }
+
+  if (isAuth) {
+    history.push(HOME_ROUTE)
   }
 
   return (
@@ -67,12 +85,12 @@ const Login: React.FC = () => {
             required
             fullWidth
             id="username"
-            label="Username"
+            label="username"
             name="username"
             autoComplete="username"
             autoFocus
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -87,22 +105,8 @@ const Login: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {!isLogin && (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="сonfirm-password"
-              label="Сonfirm password"
-              type="password"
-              id="сonfirm-password"
-              autoComplete="current-password"
-            />
-          )}
           <Button
             onClick={signUpOrsignIn}
-            type="submit"
             fullWidth
             variant="contained"
             color="primary"
@@ -113,9 +117,7 @@ const Login: React.FC = () => {
           {isLogin && (
             <Grid container>
               <Grid item>
-                <Link to={REGISTRATION_ROUTE}>
-                  <LinkMU>Don't have an account? Registration</LinkMU>
-                </Link>
+                <Link to={REGISTRATION_ROUTE}>Don't have an account? Registration</Link>
               </Grid>
             </Grid>
           )}

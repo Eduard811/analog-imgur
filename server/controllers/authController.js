@@ -33,7 +33,8 @@ class authController {
 
       await user.save()
 
-      return res.json({ message: 'Пользователь был успешно зарегистрирован' })
+      const token = generateAccessToken(user._id, user.roles)
+      return res.json({ token })
     } catch (error) {
       console.log(error)
       res.status(400).json({ message: 'registration error' })
