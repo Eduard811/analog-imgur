@@ -2,7 +2,7 @@ import Admin from './components/Admin/Admin'
 import Chat from './components/Chat/Chat'
 import Home from './components/Home/Home'
 import Auth from './components/Auth/Auth'
-import Post from './components/Post/Post'
+// import Post from './components/Post/Post'
 
 import {
   ADMIN_ROUTE,
@@ -25,10 +25,10 @@ export const publicRoutes = [
     path: HOME_ROUTE,
     Component: Home,
   },
-  {
-    path: POST_ROUTE,
-    Component: Post,
-  },
+  // {
+  //   path: POST_ROUTE,
+  //   Component: Post,
+  // },
   {
     path: LOGIN_ROUTE,
     Component: Auth,
