@@ -35,6 +35,17 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: 16,
       marginBottom: 16,
     },
+    addPost: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%',
+    },
   })
 )
 const Home: React.FC = () => {
@@ -89,15 +100,17 @@ const Home: React.FC = () => {
   return (
     <MainContainer>
       <>
-        <div>
-          <Button
-            onClick={isAuth ? onClickAddPost : () => history.push(LOGIN_ROUTE)}
-            className={classes.customButton}
-            variant="contained"
-            color="primary"
-          >
-            New post
-          </Button>
+        <div className={classes.root}>
+          <div className={classes.addPost}>
+            <Button
+              onClick={isAuth ? onClickAddPost : () => history.push(LOGIN_ROUTE)}
+              className={classes.customButton}
+              variant="contained"
+              color="primary"
+            >
+              New post
+            </Button>
+          </div>
           {isLoading ? (
             <h1>Идет загрузка...</h1>
           ) : (

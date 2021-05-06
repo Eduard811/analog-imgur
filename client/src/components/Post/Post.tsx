@@ -23,10 +23,19 @@ interface Props {
 const Post = ({ description, picture, title }: Props) => {
   const classes = useStyles()
 
+  const i = picture.indexOf('.')
+  const format = i === -1 ? picture : picture.slice(i)
+
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia className={classes.media} image={picture} title={title} />
+        <CardMedia
+          component={format !== '.mp4' ? 'img' : 'video'}
+          className={classes.media}
+          image={picture}
+          title={title}
+          controls
+        />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
             {description}

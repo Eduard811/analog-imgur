@@ -3,9 +3,9 @@ const path = require('path')
 const fs = require('fs')
 
 class fileService {
-  saveFile(file) {
+  saveFile(file, format) {
     try {
-      const fileName = uuid.v4() + '.jpg'
+      const fileName = uuid.v4() + format
       const filePath = path.resolve('static', fileName)
       file.mv(filePath)
       return fileName

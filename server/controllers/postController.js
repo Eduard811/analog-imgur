@@ -7,7 +7,10 @@ class postController {
       const { title, description } = req.body
       const { picture } = req.files
 
-      const fileName = fileService.saveFile(picture)
+      const i = picture.name.indexOf('.')
+      const format = i === -1 ? picture.name : picture.name.slice(i)
+
+      const fileName = fileService.saveFile(picture, format)
       const post = await Post.create({ title, description, picture: fileName })
       res.json(post)
     } catch (error) {
