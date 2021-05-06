@@ -43,8 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      width: '100%',
+      maxWidth: 1088,
+      '@media (max-width: 1135px)': {
+        maxWidth: 812,
+      },
+      '@media (max-width: 859px)': {
+        maxWidth: 536,
+      },
     },
   })
 )

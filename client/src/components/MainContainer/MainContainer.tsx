@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     container: {
       padding: '40px 0',
+      display: 'flex',
+      justifyContent: 'center',
     },
     link: {
       textDecoration: 'none',
