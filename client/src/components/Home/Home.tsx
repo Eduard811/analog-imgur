@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 const Home: React.FC = () => {
-  const { posts, isLoading, error } = useTypedSelector((state) => state.post)
+  const { posts, isLoading, error, page, limit, totalCount } = useTypedSelector((state) => state.post)
   const { isAuth } = useTypedSelector((state) => state.user)
   const { fetchPost } = useActions()
   const classes = useStyles()
@@ -79,14 +79,31 @@ const Home: React.FC = () => {
   const onClickAddPost = () => setPost(!post)
 
   useEffect(() => {
-    fetchPost()
+    fetchPost(page, limit)
   }, [])
+
+  useEffect(() => {
+    document.addEventListener('scroll', scrollHandler)
+    return () => {
+      document.removeEventListener('scroll', scrollHandler)
+    }
+  })
+
+  const scrollHandler = (e: any) => {
+    let scrollHeight = e.target.documentElement.scrollHeight //общая высота страницы с учетом скролла
+    let scrollTop = e.target.documentElement.scrollTop //текущее положение скролла от верха страницы
+    let innerHeight = window.innerHeight // высота видимой области
+
+    if (scrollHeight - (innerHeight + scrollTop) < 100 && posts.length < totalCount) {
+      fetchPost(page, limit)
+    }
+  }
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [file, setFile] = useState('')
 
-  const selectFile = (event: any) => setFile(event.target.files[0])
+  const selectFile = (e: any) => setFile(e.target.files[0])
 
   const addPost = () => {
     const formData = new FormData()
@@ -100,7 +117,7 @@ const Home: React.FC = () => {
           setTitle('')
           setDescription('')
           setFile('')
-          fetchPost()
+          fetchPost(page, limit)
           setPost(false)
           alert('post added')
         })
@@ -131,9 +148,9 @@ const Home: React.FC = () => {
               New post
             </Button>
           </div>
-          {isLoading ? (
+          {isLoading && posts.length === 0 ? (
             <div className={classes.postsWrap}>
-              {Array(8)
+              {Array(limit)
                 .fill(0)
                 .map((_, index) => (
                   <div className={classes.post} key={index}>
@@ -154,6 +171,15 @@ const Home: React.FC = () => {
                   />
                 </div>
               ))}
+              {isLoading &&
+                posts.length > 0 &&
+                Array(limit)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div className={classes.post} key={index}>
+                      <Skeleton animation="wave" variant="rect" className={classes.skeleton} />
+                    </div>
+                  ))}
             </div>
           )}
         </div>

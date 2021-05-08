@@ -2,6 +2,9 @@ export interface PostState {
   posts: any[]
   isLoading: boolean
   error: null | string
+  page: number
+  limit: number
+  totalCount: number
 }
 
 export enum PostActionTypes {
@@ -17,6 +20,7 @@ interface FetchPostsAction {
 interface FetchPostsSuccessAction {
   type: PostActionTypes.FETCH_POSTS_SUCCESS
   payload: any[]
+  totalCount: number
 }
 
 interface FetchPostsErrorAction {

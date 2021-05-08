@@ -20,8 +20,15 @@ class postController {
 
   async getAll(req, res) {
     try {
-      const posts = await Post.find()
-      return res.json(posts)
+      let { page } = req.query
+      const limit = parseInt(req.query.limit)
+      // page = page || 1
+      // limit = limit || 4
+      let offset = page * limit - limit
+      const totalCount = await Post.countDocuments({})
+      const posts = await Post.find().skip(offset).limit(limit)
+
+      return res.json({ posts, totalCount })
     } catch (error) {
       res.status(500).json(error)
     }
