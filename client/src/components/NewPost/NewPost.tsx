@@ -25,17 +25,17 @@ const NewPost = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [file, setFile] = useState('')
+  const [drag, setDrag] = useState(false)
 
   const closeNewPost = () => {
     toggleNewPost(false)
+    setDrag(false)
     setTimeout(() => {
       setTitle('')
       setDescription('')
       setFile('')
     }, 300)
   }
-
-  const [drag, setDrag] = useState(false)
 
   const dragStartHandler = (e: any) => {
     e.preventDefault()
@@ -131,7 +131,7 @@ const NewPost = () => {
             onDragLeave={(e) => dragLeaveHandler(e)}
             onDragOver={(e) => dragStartHandler(e)}
           >
-            Перетащите файлы что бы загрузить их
+            Перетащите файл что бы загрузить их
           </div>
         )}
       </DialogContent>
