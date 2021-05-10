@@ -13,6 +13,20 @@ const useStyles = makeStyles((theme: Theme) =>
     inputWrap: {
       marginTop: 15,
     },
+    button: {
+      display: 'flex',
+      width: '100%',
+      height: 200,
+      '@media (max-width: 1279px)': {
+        display: 'none',
+      },
+    },
+    buttonM: {
+      display: 'none',
+      '@media (max-width: 1279px)': {
+        display: 'inline-block',
+      },
+    },
   })
 )
 
@@ -49,12 +63,14 @@ const NewPost = () => {
 
   const onDropHandler = (e: any) => {
     e.preventDefault()
+    setDrag(false)
     setFile(e.dataTransfer.files[0])
   }
 
   const selectFile = (e: any) => setFile(e.target.files[0])
 
   const addPost = () => {
+    console.log(file)
     const formData = new FormData()
     formData.append('title', title)
     formData.append('description', description)
@@ -111,29 +127,23 @@ const NewPost = () => {
             type="file"
           />
           <label htmlFor="contained-button-file">
-            <Button variant="contained" color="primary" component="span">
-              Choose Photo/Video
+            <Button
+              onDragStart={(e: any) => dragStartHandler(e)}
+              onDragLeave={(e: any) => dragLeaveHandler(e)}
+              onDragOver={(e: any) => dragStartHandler(e)}
+              onDrop={(e: any) => onDropHandler(e)}
+              className={classes.button}
+              variant="outlined"
+              color="primary"
+              component="span"
+            >
+              {drag ? 'Drop the file' : file ? 'File added' : 'Choose Photo/Video or drag and drop'}
+            </Button>
+            <Button className={classes.buttonM} variant="contained" color="primary" component="span">
+              {file ? 'File added' : 'Choose Photo/Video'}
             </Button>
           </label>
         </div>
-        {drag ? (
-          <div
-            onDragStart={(e) => dragStartHandler(e)}
-            onDragLeave={(e) => dragLeaveHandler(e)}
-            onDragOver={(e) => dragStartHandler(e)}
-            onDrop={(e) => onDropHandler(e)}
-          >
-            {file ? 'Файл добавлен' : 'Отпустите файлы что бы загрузить их'}
-          </div>
-        ) : (
-          <div
-            onDragStart={(e) => dragStartHandler(e)}
-            onDragLeave={(e) => dragLeaveHandler(e)}
-            onDragOver={(e) => dragStartHandler(e)}
-          >
-            Перетащите файл что бы загрузить их
-          </div>
-        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={closeNewPost} color="primary">
