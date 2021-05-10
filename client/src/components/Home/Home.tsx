@@ -6,7 +6,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import MainContainer from '../MainContainer/MainContainer'
 import Button from '@material-ui/core/Button'
 import { LOGIN_ROUTE } from '../../utils/consts'
-import Post from '../Post/Post'
+import Posts from '../Posts/Posts'
 import Skeleton from '@material-ui/lab/Skeleton'
 import NewPost from '../NewPost/NewPost'
 
@@ -65,14 +65,14 @@ const useStyles = makeStyles((theme: Theme) =>
 const Home: React.FC = () => {
   const { posts, isLoading, error, page, limit, totalCount } = useTypedSelector((state) => state.post)
   const { isAuth } = useTypedSelector((state) => state.user)
-  const { fetchPost, toggleNewPost } = useActions()
+  const { fetchPostsAC, toggleNewPost } = useActions()
   const classes = useStyles()
   const history = useHistory()
 
   const openNewPost = () => toggleNewPost(true)
 
   useEffect(() => {
-    fetchPost(page, limit)
+    fetchPostsAC(page, limit)
   }, [])
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const Home: React.FC = () => {
     let innerHeight = window.innerHeight // высота видимой области
 
     if (scrollHeight - (innerHeight + scrollTop) < 100 && posts.length < totalCount) {
-      fetchPost(page, limit)
+      fetchPostsAC(page, limit)
     }
   }
 
@@ -123,8 +123,12 @@ const Home: React.FC = () => {
           ) : (
             <div className={classes.postsWrap}>
               {posts.map((post) => (
-                <div className={classes.post} key={post._id}>
-                  <Post
+                <div
+                  className={classes.post}
+                  key={post._id}
+                  onClick={() => history.push(`/post/${post._id}`)}
+                >
+                  <Posts
                     comments={post.comments}
                     views={post.views}
                     likes={post.likes}

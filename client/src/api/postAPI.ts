@@ -11,6 +11,6 @@ export const fetchPosts = async (page: number, limit = 6) => {
 }
 
 export const fetchPost = async (id: string) => {
-  const response = await $host.get(`api/post/${id}`, { responseType: 'json' })
-  return response
+  const { data } = await $host.get(`api/post/${id}`, { responseType: 'json' })
+  return data
 }

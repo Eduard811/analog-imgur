@@ -1,93 +1,84 @@
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
-import FavoriteIcon from '@material-ui/icons/Favorite'
-import SmsIcon from '@material-ui/icons/Sms'
-import VisibilityIcon from '@material-ui/icons/Visibility'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import Avatar from '@material-ui/core/Avatar'
+import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
+import { red } from '@material-ui/core/colors'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import MainContainer from '../MainContainer/MainContainer'
+import { useActions } from '../../hooks/useActions'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 
-const useStyles = makeStyles({
-  root: {
-    width: 260,
-    '@media (max-width: 567px)': {
-      width: 'calc(100vw - 16px - 16px)',
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      maxWidth: 676,
     },
-  },
-  media: {
-    height: 260,
-  },
-  icon: {
-    fontSize: 17,
-    marginRight: 3,
-  },
-  cardContent: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: 5,
-  },
-  wrapIcon: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  counter: {
-    color: 'rgba(255, 255, 255, 0.3)',
-    fontSize: 13,
-  },
-})
+    avatar: {
+      backgroundColor: red[500],
+    },
+  })
+)
 
-interface Props {
-  title: string
-  picture: string
-  likes: number
-  views: number
-  comments: any[]
-}
-
-const Post = ({ picture, title, likes, views, comments }: Props) => {
+const Post: React.FC = () => {
   const classes = useStyles()
+  const { id } = useParams<{ id: string }>()
+  const { fetchPostAC } = useActions()
+  const { post, isLoading } = useTypedSelector((state) => state.post)
 
-  const i = picture.indexOf('.')
-  const format = i === -1 ? picture : picture.slice(i)
+  useEffect(() => {
+    fetchPostAC(id)
+  }, [])
+
+  if (isLoading) {
+    return <h1>идет загрузка</h1>
+  }
+
+  let i
+  let format
+
+  if (!!post.picture) {
+    i = post.picture.indexOf('.')
+    format = i === -1 ? post.picture : post.picture.slice(i)
+  }
 
   return (
-    <Card className={classes.root}>
-      <CardActionArea>
+    <MainContainer>
+      <Card className={classes.root}>
+        <CardHeader
+          avatar={
+            <Avatar aria-label="recipe" className={classes.avatar}>
+              R
+            </Avatar>
+          }
+          title="Shrimp and Chorizo Paella"
+          subheader="September 14, 2016"
+        />
         <CardMedia
           component={format !== '.mp4' ? 'img' : 'video'}
-          className={classes.media}
-          image={picture}
-          title={title}
+          image={process.env.REACT_APP_API_URL + post.picture}
+          title="Paella dish"
           controls
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            {title.length > 30 ? title.slice(0, 30) + ' ' + '...' : title}
+            This impressive paella is a perfect party dish and a fun meal to cook together with your guests.
+            Add 1 cup of frozen peas along with the mussels, if you like.
           </Typography>
-          <div className={classes.cardContent}>
-            <div className={classes.wrapIcon}>
-              <FavoriteIcon color="disabled" className={classes.icon} />
-              <Typography className={classes.counter} component="p">
-                {likes}
-              </Typography>
-            </div>
-            <div className={classes.wrapIcon}>
-              <SmsIcon color="disabled" className={classes.icon} />
-              <Typography className={classes.counter} component="p">
-                {comments.length}
-              </Typography>
-            </div>
-            <div className={classes.wrapIcon}>
-              <VisibilityIcon color="disabled" className={classes.icon} />
-              <Typography className={classes.counter} component="p">
-                {views}
-              </Typography>
-            </div>
-          </div>
         </CardContent>
-      </CardActionArea>
-    </Card>
+        <CardActions disableSpacing>
+          <IconButton aria-label="add to favorites">
+            <FavoriteIcon />
+          </IconButton>
+        </CardActions>
+      </Card>
+    </MainContainer>
   )
 }
 

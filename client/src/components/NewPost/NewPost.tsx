@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const NewPost = () => {
   const { page, limit } = useTypedSelector((state) => state.post)
   const { newPost } = useTypedSelector((state) => state.home)
-  const { fetchPost, toggleNewPost } = useActions()
+  const { fetchPostsAC, toggleNewPost } = useActions()
   const classes = useStyles()
 
   const [title, setTitle] = useState('')
@@ -82,7 +82,7 @@ const NewPost = () => {
           setTitle('')
           setDescription('')
           setFile('')
-          fetchPost(page, limit)
+          fetchPostsAC(page, limit)
           toggleNewPost(false)
           alert('post added')
         })
