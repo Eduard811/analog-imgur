@@ -65,14 +65,14 @@ const useStyles = makeStyles((theme: Theme) =>
 const Home: React.FC = () => {
   const { posts, isLoading, error, page, limit, totalCount } = useTypedSelector((state) => state.post)
   const { isAuth } = useTypedSelector((state) => state.user)
-  const { fetchPostsAC, toggleNewPost } = useActions()
+  const { fetchPostsAC, toggleNewPost, scrollFetchingAC } = useActions()
   const classes = useStyles()
   const history = useHistory()
 
   const openNewPost = () => toggleNewPost(true)
 
   useEffect(() => {
-    fetchPostsAC(page, limit)
+    fetchPostsAC(1, limit)
   }, [])
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const Home: React.FC = () => {
     let innerHeight = window.innerHeight // высота видимой области
 
     if (scrollHeight - (innerHeight + scrollTop) < 100 && posts.length < totalCount) {
-      fetchPostsAC(page, limit)
+      scrollFetchingAC(page, limit)
     }
   }
 

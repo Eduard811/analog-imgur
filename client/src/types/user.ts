@@ -1,5 +1,5 @@
 export interface UserState {
-  user: {}
+  user: any
   isAuth: boolean
 }
 

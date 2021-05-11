@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { secret } = require('../config')
 
-const generateAccessToken = (id, roles) => {
-  const payload = { id, roles }
+const generateAccessToken = (id, roles, username) => {
+  const payload = { id, roles, username }
 
   return jwt.sign(payload, secret, { expiresIn: '24h' })
 }
@@ -33,7 +33,7 @@ class authController {
 
       await user.save()
 
-      const token = generateAccessToken(user._id, user.roles)
+      const token = generateAccessToken(user._id, user.roles, user.username)
       return res.json({ token })
     } catch (error) {
       console.log(error)
@@ -58,7 +58,7 @@ class authController {
         return res.status(400).json({ message: 'Неверный логин или пароль' })
       }
 
-      const token = generateAccessToken(user._id, user.roles)
+      const token = generateAccessToken(user._id, user.roles, user.username)
       return res.json({ token })
     } catch (error) {
       console.log(error)
@@ -76,8 +76,8 @@ class authController {
   }
 
   async checkAuth(req, res) {
-    const { id, roles } = req.user
-    const token = generateAccessToken(id, roles)
+    const { id, roles, username } = req.user
+    const token = generateAccessToken(id, roles, username)
     return res.json({ token })
   }
 }

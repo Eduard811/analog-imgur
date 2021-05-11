@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 const NewPost = () => {
-  const { page, limit } = useTypedSelector((state) => state.post)
+  const { limit } = useTypedSelector((state) => state.post)
+  const { user } = useTypedSelector((state) => state.user)
   const { newPost } = useTypedSelector((state) => state.home)
   const { fetchPostsAC, toggleNewPost } = useActions()
   const classes = useStyles()
@@ -70,11 +71,12 @@ const NewPost = () => {
   const selectFile = (e: any) => setFile(e.target.files[0])
 
   const addPost = () => {
-    console.log(file)
     const formData = new FormData()
     formData.append('title', title)
     formData.append('description', description)
     formData.append('picture', file)
+    formData.append('username', user.username)
+    formData.append('date', JSON.stringify(new Date()))
 
     if (title && description && file) {
       createPost(formData)
@@ -82,7 +84,7 @@ const NewPost = () => {
           setTitle('')
           setDescription('')
           setFile('')
-          fetchPostsAC(page, limit)
+          fetchPostsAC(1, limit)
           toggleNewPost(false)
           alert('post added')
         })

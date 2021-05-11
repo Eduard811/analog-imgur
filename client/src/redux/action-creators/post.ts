@@ -21,7 +21,7 @@ export const fetchPostsAC = (page: number, limit: number) => async (dispatch: Di
 
 export const fetchPostAC = (id: string) => async (dispatch: Dispatch<PostAction>) => {
   try {
-    dispatch({ type: PostActionTypes.FETCH_POST })
+    dispatch({ type: PostActionTypes.FETCH_POSTS })
     const response = await fetchPost(id)
     dispatch({
       type: PostActionTypes.FETCH_POST_SUCCESS,
@@ -31,6 +31,22 @@ export const fetchPostAC = (id: string) => async (dispatch: Dispatch<PostAction>
     dispatch({
       type: PostActionTypes.FETCH_POSTS_ERROR,
       payload: 'Произошла ошибка при загрузке поста',
+    })
+  }
+}
+
+export const scrollFetchingAC = (page: number, limit: number) => async (dispatch: Dispatch<PostAction>) => {
+  try {
+    dispatch({ type: PostActionTypes.FETCH_POSTS })
+    const response = await fetchPosts(page, limit)
+    dispatch({
+      type: PostActionTypes.SCROLL_FETCHING,
+      payload: response.posts,
+    })
+  } catch (error) {
+    dispatch({
+      type: PostActionTypes.FETCH_POSTS_ERROR,
+      payload: 'Произошла ошибка при загрузке постов',
     })
   }
 }
