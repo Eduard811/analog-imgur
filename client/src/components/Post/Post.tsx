@@ -31,6 +31,7 @@ const Post: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { fetchPostAC } = useActions()
   const { post, isLoading } = useTypedSelector((state) => state.post)
+  const { user } = useTypedSelector((state) => state.user)
 
   useEffect(() => {
     fetchPostAC(id)
@@ -53,12 +54,14 @@ const Post: React.FC = () => {
       <Card className={classes.root}>
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              R
-            </Avatar>
+            <Avatar
+              alt={post.username}
+              src={process.env.REACT_APP_API_URL + user.avatar}
+              className={classes.avatar}
+            />
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={post.username}
+          subheader={post.date}
         />
         <CardMedia
           component={format !== '.mp4' ? 'img' : 'video'}
@@ -68,8 +71,7 @@ const Post: React.FC = () => {
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            This impressive paella is a perfect party dish and a fun meal to cook together with your guests.
-            Add 1 cup of frozen peas along with the mussels, if you like.
+            {post.description}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>

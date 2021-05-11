@@ -16,5 +16,6 @@ router.post(
 router.post('/login', authController.login)
 router.get('/check', authMiddleware, authController.checkAuth)
 router.get('/users', roleMiddleware(['ADMIN']), authController.getUsers)
+router.put('/avatar', authController.updateAvatar)
 
 module.exports = router

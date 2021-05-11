@@ -3,6 +3,20 @@ import { HomeAction, HomeActionTypes, HomeState } from '../../types/home'
 const initialState: HomeState = {
   isOpen: false, //sidebar
   newPost: false, //modal
+  months: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
 }
 
 export const homeReducer = (state = initialState, action: HomeAction) => {

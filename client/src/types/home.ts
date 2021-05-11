@@ -1,6 +1,7 @@
 export interface HomeState {
   isOpen: boolean
   newPost: boolean
+  months: string[]
 }
 
 export enum HomeActionTypes {

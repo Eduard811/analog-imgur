@@ -23,11 +23,13 @@ class fileService {
     }
   }
 
-  updateFile(file, pictureName) {
+  updateFile(file, prevName, format) {
     try {
-      this.deleteFile(pictureName)
-      const filePath = path.resolve('static', pictureName)
+      this.deleteFile(prevName)
+      const fileName = uuid.v4() + format
+      const filePath = path.resolve('static', fileName)
       file.mv(filePath)
+      return fileName
     } catch (error) {
       console.log(error)
     }

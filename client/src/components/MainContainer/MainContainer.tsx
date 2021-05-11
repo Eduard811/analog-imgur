@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: 'transparent',
       },
     },
+    input: {
+      display: 'none',
+    },
   })
 )
 
@@ -96,10 +99,10 @@ function ScrollTop(props: Props) {
 const MainContainer = (props: Props) => {
   const classes = useStyles()
   const { children } = props
-  const { toggleIsOpen, setIsAuth } = useActions()
+  const { toggleIsOpen, setIsAuth, updateAvatarAC } = useActions()
 
-  const { isAuth } = useTypedSelector((state) => state.user)
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const { user, isAuth } = useTypedSelector((state) => state.user)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -113,6 +116,13 @@ const MainContainer = (props: Props) => {
     localStorage.clear()
     setIsAuth({}, !isAuth)
     setAnchorEl(null)
+  }
+
+  const selectFile = async (e: any) => {
+    const formData = new FormData()
+    formData.append('id', user.id)
+    formData.append('avatar', e.target.files[0])
+    const response = await updateAvatarAC(formData)
   }
 
   return (
@@ -149,7 +159,17 @@ const MainContainer = (props: Props) => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Avatar</MenuItem>
+                  <input
+                    className={classes.input}
+                    onChange={selectFile}
+                    accept="image/*"
+                    id="contained-button-file"
+                    multiple
+                    type="file"
+                  />
+                  <label htmlFor="contained-button-file">
+                    <MenuItem onClick={handleClose}>Avatar</MenuItem>
+                  </label>
                   <MenuItem onClick={logout}>Logout</MenuItem>
                 </Menu>
               </div>

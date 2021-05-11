@@ -1,6 +1,8 @@
 import Badge from '@material-ui/core/Badge'
 import Avatar from '@material-ui/core/Avatar'
 import { Theme, makeStyles, withStyles, createStyles } from '@material-ui/core/styles'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 const StyledBadge = withStyles((theme: Theme) =>
   createStyles({
@@ -56,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function BadgeAvatars() {
   const classes = useStyles()
+  const { user, isFetch } = useTypedSelector((state) => state.user)
 
   return (
     <div className={classes.root}>
@@ -67,7 +70,11 @@ export default function BadgeAvatars() {
         }}
         variant="dot"
       >
-        <Avatar alt="Ed" src="/static/images/avatar/1.jpg" />
+        {isFetch ? (
+          <Skeleton variant="circle" width={40} height={40} />
+        ) : (
+          <Avatar alt={user.name} src={process.env.REACT_APP_API_URL + user.avatar} />
+        )}
       </StyledBadge>
     </div>
   )

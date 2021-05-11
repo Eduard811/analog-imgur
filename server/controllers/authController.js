@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { secret } = require('../config')
+const fileService = require('../service/fileService')
 
 const generateAccessToken = (id, roles, username) => {
   const payload = { id, roles, username }
@@ -34,7 +35,7 @@ class authController {
       await user.save()
 
       const token = generateAccessToken(user._id, user.roles, user.username)
-      return res.json({ token })
+      return res.json({ token, avatar: '' })
     } catch (error) {
       console.log(error)
       res.status(400).json({ message: 'registration error' })
@@ -59,7 +60,9 @@ class authController {
       }
 
       const token = generateAccessToken(user._id, user.roles, user.username)
-      return res.json({ token })
+      const { avatar } = user
+
+      return res.json({ token, avatar })
     } catch (error) {
       console.log(error)
       res.status(400).json({ message: 'login error' })
@@ -78,7 +81,38 @@ class authController {
   async checkAuth(req, res) {
     const { id, roles, username } = req.user
     const token = generateAccessToken(id, roles, username)
-    return res.json({ token })
+    const user = await User.findOne({ username })
+    const { avatar } = user
+
+    return res.json({ token, avatar })
+  }
+
+  async updateAvatar(req, res) {
+    try {
+      const { id } = req.body
+      const picture = req.files.avatar
+
+      if (!id) {
+        return res.status(400).json({ message: 'id не указан' })
+      }
+
+      const user = await User.findById(id)
+
+      const i = picture.name.indexOf('.')
+      const format = i === -1 ? picture.name : picture.name.slice(i)
+
+      let fileName
+      user.avatar
+        ? (fileName = fileService.updateFile(picture, user.avatar, format))
+        : (fileName = fileService.saveFile(picture, format))
+
+      const updateUser = await User.findByIdAndUpdate(id, { avatar: fileName }, { new: true })
+      const { avatar } = updateUser
+
+      return res.json({ avatar })
+    } catch (error) {
+      res.status(400).json({ message: 'avatar error' })
+    }
   }
 }
 
