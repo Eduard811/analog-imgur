@@ -17,13 +17,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       width: '100%',
       height: 200,
-      '@media (max-width: 1279px)': {
+      '@media (max-width: 768px)': {
         display: 'none',
       },
     },
     buttonM: {
       display: 'none',
-      '@media (max-width: 1279px)': {
+      '@media (max-width: 768px)': {
         display: 'inline-block',
       },
     },

@@ -14,6 +14,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import MainContainer from '../MainContainer/MainContainer'
 import { useActions } from '../../hooks/useActions'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
+import Loader from '../Loader/Loader'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,15 +32,10 @@ const Post: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { fetchPostAC } = useActions()
   const { post, isLoading } = useTypedSelector((state) => state.post)
-  const { user } = useTypedSelector((state) => state.user)
 
   useEffect(() => {
     fetchPostAC(id)
   }, [])
-
-  if (isLoading) {
-    return <h1>идет загрузка</h1>
-  }
 
   let i
   let format
@@ -51,35 +47,39 @@ const Post: React.FC = () => {
 
   return (
     <MainContainer>
-      <Card className={classes.root}>
-        <CardHeader
-          avatar={
-            <Avatar
-              alt={post.username}
-              src={process.env.REACT_APP_API_URL + post.avatar}
-              className={classes.avatar}
-            />
-          }
-          title={post.username}
-          subheader={post.date}
-        />
-        <CardMedia
-          component={format !== '.mp4' ? 'img' : 'video'}
-          image={process.env.REACT_APP_API_URL + post.picture}
-          title="Paella dish"
-          controls
-        />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {post.description}
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-        </CardActions>
-      </Card>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Card className={classes.root}>
+          <CardHeader
+            avatar={
+              <Avatar
+                alt={post.username}
+                src={process.env.REACT_APP_API_URL + post.avatar}
+                className={classes.avatar}
+              />
+            }
+            title={post.username}
+            subheader={post.date}
+          />
+          <CardMedia
+            component={format !== '.mp4' ? 'img' : 'video'}
+            image={process.env.REACT_APP_API_URL + post.picture}
+            title="Paella dish"
+            controls
+          />
+          <CardContent>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {post.description}
+            </Typography>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+          </CardActions>
+        </Card>
+      )}
     </MainContainer>
   )
 }
