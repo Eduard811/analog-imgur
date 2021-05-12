@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { secret } = require('../config')
 const fileService = require('../service/fileService')
+const Post = require('../model/Post')
 
 const generateAccessToken = (id, roles, username) => {
   const payload = { id, roles, username }
@@ -98,15 +99,13 @@ class authController {
 
       const user = await User.findById(id)
 
-      const i = picture.name.indexOf('.')
-      const format = i === -1 ? picture.name : picture.name.slice(i)
-
       let fileName
       user.avatar
-        ? (fileName = fileService.updateFile(picture, user.avatar, format))
-        : (fileName = fileService.saveFile(picture, format))
+        ? (fileName = fileService.updateFile(picture, user.avatar))
+        : (fileName = fileService.saveFile(picture))
 
       const updateUser = await User.findByIdAndUpdate(id, { avatar: fileName }, { new: true })
+      const userPosts = await Post.updateMany({ authorId: id }, { avatar: fileName })
       const { avatar } = updateUser
 
       return res.json({ avatar })

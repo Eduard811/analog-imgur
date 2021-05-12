@@ -163,11 +163,11 @@ const MainContainer = (props: Props) => {
                     className={classes.input}
                     onChange={selectFile}
                     accept="image/*"
-                    id="contained-button-file"
+                    id="avatar"
                     multiple
                     type="file"
                   />
-                  <label htmlFor="contained-button-file">
+                  <label htmlFor="avatar">
                     <MenuItem onClick={handleClose}>Avatar</MenuItem>
                   </label>
                   <MenuItem onClick={logout}>Logout</MenuItem>

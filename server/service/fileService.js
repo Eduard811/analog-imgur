@@ -3,8 +3,11 @@ const path = require('path')
 const fs = require('fs')
 
 class fileService {
-  saveFile(file, format) {
+  saveFile(file) {
     try {
+      const i = file.name.indexOf('.')
+      const format = i === -1 ? file.name : file.name.slice(i)
+
       const fileName = uuid.v4() + format
       const filePath = path.resolve('static', fileName)
       file.mv(filePath)
@@ -26,6 +29,10 @@ class fileService {
   updateFile(file, prevName, format) {
     try {
       this.deleteFile(prevName)
+
+      const i = file.name.indexOf('.')
+      const format = i === -1 ? file.name : file.name.slice(i)
+
       const fileName = uuid.v4() + format
       const filePath = path.resolve('static', fileName)
       file.mv(filePath)

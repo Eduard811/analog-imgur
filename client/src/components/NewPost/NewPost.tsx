@@ -73,18 +73,20 @@ const NewPost = () => {
   const addPost = () => {
     const date = new Date()
     const formData = new FormData()
+    formData.append('authorId', user.id)
     formData.append('title', title)
     formData.append('description', description)
     formData.append('picture', file)
-    formData.append('username', user.username)
     formData.append('date', `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`)
 
     if (title && description && file) {
       createPost(formData)
         .then(() => {
-          setTitle('')
-          setDescription('')
-          setFile('')
+          setTimeout(() => {
+            setTitle('')
+            setDescription('')
+            setFile('')
+          }, 300)
           fetchPostsAC(1, limit)
           toggleNewPost(false)
           alert('post added')

@@ -56,7 +56,7 @@ const Post: React.FC = () => {
           avatar={
             <Avatar
               alt={post.username}
-              src={process.env.REACT_APP_API_URL + user.avatar}
+              src={process.env.REACT_APP_API_URL + post.avatar}
               className={classes.avatar}
             />
           }
