@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
@@ -15,14 +15,19 @@ import MainContainer from '../MainContainer/MainContainer'
 import { useActions } from '../../hooks/useActions'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
 import Loader from '../Loader/Loader'
+import { likeOrDislike } from '../../api/postAPI'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
       maxWidth: 676,
     },
-    avatar: {
-      backgroundColor: red[500],
+    card: {
+      marginTop: 15,
+      width: '100%',
     },
   })
 )
@@ -30,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const Post: React.FC = () => {
   const classes = useStyles()
   const { id } = useParams<{ id: string }>()
-  const { fetchPostAC } = useActions()
-  const { post, isLoading } = useTypedSelector((state) => state.post)
+  const { fetchPostAC, likeOrDislikeAC } = useActions()
+  const { post, isLoading, isLikeFetch } = useTypedSelector((state) => state.post)
 
   useEffect(() => {
     fetchPostAC(id)
@@ -45,40 +50,52 @@ const Post: React.FC = () => {
     format = i === -1 ? post.picture : post.picture.slice(i)
   }
 
+  const onLikeHandler = () => {
+    likeOrDislikeAC(id)
+  }
+
   return (
     <MainContainer>
       {isLoading ? (
         <Loader />
       ) : (
-        <Card className={classes.root}>
-          <CardHeader
-            avatar={
-              <Avatar
-                alt={post.username}
-                src={process.env.REACT_APP_API_URL + post.avatar}
-                className={classes.avatar}
-              />
-            }
-            title={post.username}
-            subheader={post.date}
-          />
-          <CardMedia
-            component={format !== '.mp4' ? 'img' : 'video'}
-            image={process.env.REACT_APP_API_URL + post.picture}
-            title="Paella dish"
-            controls
-          />
-          <CardContent>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {post.description}
-            </Typography>
-          </CardContent>
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-          </CardActions>
-        </Card>
+        <div className={classes.root}>
+          <Typography variant="h5" component="h1">
+            {post.title}
+          </Typography>
+          <Card className={classes.card}>
+            <CardHeader
+              avatar={<Avatar alt={post.username} src={process.env.REACT_APP_API_URL + post.avatar} />}
+              title={post.username}
+              subheader={post.date}
+            />
+            <CardMedia
+              component={format !== '.mp4' ? 'img' : 'video'}
+              image={process.env.REACT_APP_API_URL + post.picture}
+              title="Paella dish"
+              controls
+            />
+            <CardContent>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {post.description}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              {isLikeFetch ? (
+                <IconButton disabled>
+                  <FavoriteIcon />
+                </IconButton>
+              ) : (
+                <IconButton color={post.isLike ? 'secondary' : 'default'} onClick={onLikeHandler}>
+                  <FavoriteIcon />
+                </IconButton>
+              )}
+              <Typography color="textSecondary" component="span">
+                {post.likes && post.likes.length}
+              </Typography>
+            </CardActions>
+          </Card>
+        </div>
       )}
     </MainContainer>
   )

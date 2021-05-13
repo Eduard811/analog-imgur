@@ -14,3 +14,8 @@ export const fetchPost = async (id: string) => {
   const { data } = await $host.get(`api/post/${id}`, { responseType: 'json' })
   return data
 }
+
+export const likeOrDislike = async (id: string) => {
+  const { data } = await $authHost.put(`api/post/${id}`)
+  return data
+}

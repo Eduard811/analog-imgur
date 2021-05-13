@@ -56,6 +56,36 @@ class postController {
       res.status(500).json(error)
     }
   }
+
+  async likeOrDislike(req, res) {
+    try {
+      const postId = req.params.id
+      const userId = req.user.id
+
+      if (!postId || !userId) {
+        return res.status(400).json({ message: 'id не указан' })
+      }
+      const likeId = userId + postId
+      const post = await Post.findById(postId)
+      const isLike = post.likes.some((el) => el.likeId === likeId)
+      const like = { likeId }
+
+      const updateUser = isLike
+        ? await User.findByIdAndUpdate(userId, { $pull: { favoritePosts: like } }, { new: true })
+        : await User.findByIdAndUpdate(userId, { $push: { favoritePosts: like } }, { new: true })
+
+      const updatePost = isLike
+        ? await Post.findByIdAndUpdate(postId, { $pull: { likes: like } }, { new: true })
+        : await Post.findByIdAndUpdate(postId, { $push: { likes: like } }, { new: true })
+
+      const { favoritePosts } = updateUser
+      const { likes } = updatePost
+
+      return res.json({ likes, favoritePosts })
+    } catch (error) {
+      res.status(500).json(error)
+    }
+  }
 }
 
 module.exports = new postController()

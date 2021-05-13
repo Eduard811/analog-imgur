@@ -16,6 +16,11 @@ export const userReducer = (state = initialState, action: UserAction): UserState
       return { ...state, isFetch: true }
     case UserActionTypes.UPDATE_AVATAR_SUCCESS:
       return { ...state, user: { ...state.user, avatar: action.avatar }, isFetch: false }
+    case UserActionTypes.ADD_OR_DELETE_FAVORITE_POSTS:
+      return {
+        ...state,
+        user: { ...state.user, favoritePosts: [...action.favoritePosts] },
+      }
     default:
       return state
   }

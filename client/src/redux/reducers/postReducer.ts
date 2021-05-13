@@ -8,6 +8,7 @@ const initialState: PostState = {
   limit: 8,
   totalCount: 0,
   post: {},
+  isLikeFetch: false,
 }
 
 export const postReducer = (state = initialState, action: PostAction): PostState => {
@@ -36,6 +37,14 @@ export const postReducer = (state = initialState, action: PostAction): PostState
         isLoading: false,
         posts: [...state.posts, ...action.payload],
         page: state.page + 1,
+      }
+    case PostActionTypes.LIKE_OR_DISLIKE_FETCH:
+      return { ...state, isLikeFetch: true }
+    case PostActionTypes.LIKE_OR_DISLIKE_SUCCESS:
+      return {
+        ...state,
+        isLikeFetch: false,
+        post: { ...state.post, likes: [...action.likes] },
       }
     default:
       return state

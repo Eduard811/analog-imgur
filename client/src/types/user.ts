@@ -8,6 +8,7 @@ export enum UserActionTypes {
   SET_IS_AUTH = 'SET_IS_AUTH',
   UPDATE_AVATAR_FETCH = 'UPDATE_AVATAR_FETCH',
   UPDATE_AVATAR_SUCCESS = 'UPDATE_AVATAR_SUCCESS',
+  ADD_OR_DELETE_FAVORITE_POSTS = 'ADD_OR_DELETE_FAVORITE_POSTS',
 }
 
 interface SetIsAuthAction {
@@ -24,4 +25,13 @@ interface UpdateAvatarSuccessAction {
   avatar: string
 }
 
-export type UserAction = SetIsAuthAction | UpdateAvatarFetchAction | UpdateAvatarSuccessAction
+interface AddOrDeleteFavoritePostsAction {
+  type: UserActionTypes.ADD_OR_DELETE_FAVORITE_POSTS
+  favoritePosts: any[]
+}
+
+export type UserAction =
+  | SetIsAuthAction
+  | UpdateAvatarFetchAction
+  | UpdateAvatarSuccessAction
+  | AddOrDeleteFavoritePostsAction

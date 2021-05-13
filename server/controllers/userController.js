@@ -13,7 +13,7 @@ const generateAccessToken = (id, roles, username) => {
   return jwt.sign(payload, secret, { expiresIn: '24h' })
 }
 
-class authController {
+class userController {
   async registration(req, res) {
     try {
       const errors = validationResult(req)
@@ -115,4 +115,4 @@ class authController {
   }
 }
 
-module.exports = new authController()
+module.exports = new userController()

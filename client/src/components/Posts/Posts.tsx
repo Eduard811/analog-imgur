@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 interface Props {
   title: string
   picture: string
-  likes: number
+  likes: any[]
   views: number
   comments: any[]
 }
@@ -69,19 +69,19 @@ const Posts = ({ picture, title, likes, views, comments }: Props) => {
           <div className={classes.cardContent}>
             <div className={classes.wrapIcon}>
               <FavoriteIcon color="disabled" className={classes.icon} />
-              <Typography className={classes.counter} component="p">
-                {likes}
+              <Typography className={classes.counter} component="span">
+                {likes.length}
               </Typography>
             </div>
             <div className={classes.wrapIcon}>
               <SmsIcon color="disabled" className={classes.icon} />
-              <Typography className={classes.counter} component="p">
+              <Typography className={classes.counter} component="span">
                 {comments.length}
               </Typography>
             </div>
             <div className={classes.wrapIcon}>
               <VisibilityIcon color="disabled" className={classes.icon} />
-              <Typography className={classes.counter} component="p">
+              <Typography className={classes.counter} component="span">
                 {views}
               </Typography>
             </div>

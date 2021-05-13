@@ -8,7 +8,7 @@ const Post = new Schema({
   description: { type: String, required: true },
   picture: { type: String, required: true },
   date: { type: String, required: true },
-  likes: { type: Number, default: 0 },
+  likes: { type: Array, default: [] },
   views: { type: Number, default: 0 },
   comments: { type: Array, default: [] },
 })
